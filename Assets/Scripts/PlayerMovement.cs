@@ -9,6 +9,12 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]
     public bool canMove = true;
 
+    [Header("Map Limit")]
+    public float minX = -12f;
+    public float maxX = 12f;
+    public float minZ = -9f;
+    public float maxZ = 9f;
+
     private Rigidbody rb;
     private Animator animator;
 
@@ -57,11 +63,27 @@ public class PlayerMovement : MonoBehaviour
 
         if (moveDirection != Vector3.zero)
         {
-            Vector3 move = moveDirection *
-                           moveSpeed *
-                           Time.fixedDeltaTime;
+            Vector3 move =
+                moveDirection *
+                moveSpeed *
+                Time.fixedDeltaTime;
 
-            rb.MovePosition(rb.position + move);
+            Vector3 targetPos = rb.position + move;
+
+            // Clamp inside field
+            targetPos.x = Mathf.Clamp(
+                targetPos.x,
+                minX,
+                maxX
+            );
+
+            targetPos.z = Mathf.Clamp(
+                targetPos.z,
+                minZ,
+                maxZ
+            );
+
+            rb.MovePosition(targetPos);
 
             Quaternion targetRotation =
                 Quaternion.LookRotation(moveDirection);
@@ -76,7 +98,8 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleAnimation()
     {
-        float speed = moveDirection.magnitude > 0 ? 1f : 0f;
+        float speed =
+            moveDirection.magnitude > 0 ? 1f : 0f;
 
         animator.SetFloat("Speed", speed);
     }
