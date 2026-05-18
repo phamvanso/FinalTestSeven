@@ -79,9 +79,6 @@ public class BallKick : MonoBehaviour
         if (confetti != null)
         {
             Debug.Log("PLAY CONFETTI");
-
-            ParticleSystem confetti = Instantiate(this.confetti);
-
             confetti.transform.position =
                 transform.position + Vector3.up * 2f;
 
